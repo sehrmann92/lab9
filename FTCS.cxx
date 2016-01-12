@@ -21,7 +21,7 @@ int main(){
   const double xmin = -10;
   const double xmax =  10;
   const double dx = (xmax-xmin)/(N-1);
-  double dt = dx/V/1.1;
+  double dt = dx/V;
   const int Na = 10; // Number of output files up to tEnd
   const int Nk = int(tEnd/Na/dt);
 
@@ -60,11 +60,12 @@ int main(){
 //-----------------------------------------------
 void step(const double* const ualt, double* const uneu, const double dt, const double dx, const double V, const int N)
 {
-  uneu[0]=-V*dt/dx*ualt[0]+ualt[0];
-  for (int i=1; i<N; i++)
+  uneu[0]=-V*dt/dx/2.*ualt[1]+ualt[0];
+  for (int i=1; i<(N-1); i++)
   {
-    uneu[i]=-V*dt/dx*(ualt[i]-ualt[i-1])+ualt[i];
+    uneu[i]=-V*dt/dx/2.*(ualt[i+1]-ualt[i-1])+ualt[i];
   }
+  uneu[N-1]=-V*dt/dx/2.*(-ualt[N-2])+ualt[N-1];
 }
 //-----------------------------------------------
 void initialize(double* const u, const double dx, const double xmin,
